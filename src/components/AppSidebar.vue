@@ -63,7 +63,7 @@ const items = [
     props: {
       prependIcon: 'mdi-account-arrow-right-outline',
       link: true,
-      to: '/auth/login',
+      to: '/auth/register',
       exact: true
     },
     value: '/auth/register'

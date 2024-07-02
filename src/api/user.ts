@@ -13,6 +13,18 @@ export async function login(params: object) {
   return axiosIns.request<IAccessToken>(options);
 }
 
+export async function register(params: object) {
+  const options = {
+    method: 'POST',
+    url: `/api/auth/register`,
+    data: params,
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  };
+  return axiosIns.request<IAccessToken>(options);
+}
+
 export async function fetchMe() {
   const options = {
     method: 'GET',

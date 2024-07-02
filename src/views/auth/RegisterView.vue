@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Logo from '@/components/Logo.vue';
+/* Register form */
 import RegisterForm from '@/components/forms/RegisterForm.vue';
 </script>
 <template>

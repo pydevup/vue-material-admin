@@ -47,6 +47,10 @@ axiosIns.interceptors.response.use(
       case 400:
         snackbarStore.showMessage('Auth Failed');
         break;
+      case 409:
+        const { data } = error.response
+        snackbarStore.showMessage(data.errorMessage);
+        break;
       default:
         break;
     }
