@@ -57,6 +57,9 @@ export const useUserStore = defineStore('user', {
       this.username = profile.username;
       this.avatar = profile.avatar;
     },
+    setPermissions(permissions: []) {
+      this.permissions = permissions;
+    },
     async getProfile(): Promise<boolean> {
       try {
         const { data } = await fetchMe();

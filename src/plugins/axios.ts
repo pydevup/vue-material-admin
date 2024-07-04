@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { router } from '@/router';
-import { useSnackbarStore } from '@/store';
+import { useUserStore, useSnackbarStore } from '@/store';
 
 const axiosIns = axios.create({
   // You can add your headers here
@@ -12,18 +12,12 @@ const axiosIns = axios.create({
 
 // ℹ️ Add request interceptor to send the authorization header on each subsequent request after login
 axiosIns.interceptors.request.use((config) => {
-  // Retrieve token from sessionStorage
-  const vma = sessionStorage.getItem('vma');
-  // If token is found
-  if (vma) {
-    // Get request headers and if headers is undefined assign blank object
-    config.headers = config.headers || {};
-    const { token } = JSON.parse(vma);
-    // Set authorization header
-    // ℹ️ JSON.parse will convert token to string
-    config.headers.Authorization = token ? `Bearer ${token}` : '';
-  }
-
+  const userStore = useUserStore();
+  const token = userStore.getAccessToken;
+  // Get request headers and if headers is undefined assign blank object
+  config.headers = config.headers || {};
+  // Set authorization header
+  config.headers.Authorization = token ? `Bearer ${token}` : '';
   // Return modified config
   return config;
 });
@@ -35,12 +29,12 @@ axiosIns.interceptors.response.use(
   },
   (error) => {
     const statusCode = error.response.status;
+    const userStore = useUserStore();
     const snackbarStore = useSnackbarStore();
     switch (statusCode) {
       case 401:
-        // Remove "accessToken" from sessionStorage
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('userAbilities');
+        userStore.setToken('');
+        userStore.setPermissions([]);
         // If 401 response returned from api
         router.push('/auth/login');
         break;
