@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
+import { useUserStore } from '@/store';
 
 const items = [
   {
@@ -36,10 +37,14 @@ const items = [
 const router = useRouter();
 
 const handleLogout = () => {
+  sessionStorage.clear();
+  // Reset Pinia store state
+  const userStore = useUserStore()
+  userStore.$reset()
+
   router.push({
     path: '/auth/login'
   });
-  sessionStorage.clear();
 };
 </script>
 
