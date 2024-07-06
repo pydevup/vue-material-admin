@@ -1,5 +1,4 @@
-import { fetchMe } from '@/api/user';
-// import { useUserStore } from '@/store/userStore';
+import { useUserStore } from '@/store/userStore';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import PrivateRoutes from './private';
 import PublicRoutes from './public';
@@ -25,17 +24,26 @@ export const router = createRouter({
 
 // Docs: https://router.vuejs.org/guide/advanced/navigation-guards.html#global-before-guards
 router.beforeEach(async (to) => {
+  const userStore = useUserStore();
   const routeName = String(to.name);
+
+  // If the route is in the whitelist, allow access without authentication
   if (whiteList.includes(routeName)) {
     return true;
-  } else {
-    // const userStore = useUserStore();
-    try {
-      const resp = await fetchMe();
-      console.log(resp);
-      return true;
-    } catch (error) {
-      return { name: 'Login' };
-    }
+  }
+
+  // For non-whitelisted routes, check authentication
+  if (!userStore.getAccessToken) {
+    // No token, redirect to login
+    return { name: 'Login' };
+  }
+  
+  try {
+    await userStore.getProfile();
+    return true; // Allow access to the requested route
+  } catch (error) {
+    // Profile fetch failed, token might be invalid
+    userStore.setToken(''); // Clear the invalid token
+    return { name: 'Login' };
   }
 });
