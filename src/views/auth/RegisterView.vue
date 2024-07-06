@@ -15,7 +15,7 @@ import RegisterForm from '@/components/forms/RegisterForm.vue';
           <RegisterForm />
           <h5 class="text-muted text-center mt-3">
             {{ $t('have_account') }} ?
-            <a href="/auth/login" class="text-primary text-decoration-none"> {{ $t('sign_in') }}</a>
+            <RouterLink to="/auth/login" class="text-primary text-decoration-none"> {{ $t('sign_in') }}</RouterLink>
           </h5>
         </VCardItem>
       </VCard>
